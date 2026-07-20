@@ -1,0 +1,6 @@
+.reveal{opacity:0;transform:translateY(45px);transition:opacity .85s var(--ease),transform .85s var(--ease)}.reveal--left{transform:translateX(-60px)}.reveal--right{transform:translateX(60px)}.reveal.visible{opacity:1;transform:none}
+@keyframes float{50%{transform:translateY(-14px) rotate(1deg)}}@keyframes cloudDrift{50%{transform:translate(24px,-10px)}}@keyframes twinkle{50%{opacity:.35;transform:scale(.75) rotate(18deg)}}@keyframes scrollDot{to{transform:translateY(14px);opacity:0}}@keyframes ticker{to{transform:translateX(-50%)}}@keyframes pulse{50%{box-shadow:0 0 0 14px rgba(37,211,102,0),0 12px 28px rgba(25,68,92,.2)}}@keyframes kenburns{from{transform:scale(1.06) translate3d(0,0,0)}to{transform:scale(1.14) translate3d(-1.5%,-1%,0)}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* Entrada cinematográfica do hero */
+.hero-ready .hero__copy .eyebrow,.hero-ready .hero__copy h1 span,.hero-ready .hero__copy h1 em,.hero-ready .hero__copy>p,.hero-ready .hero__actions,.hero-ready .hero__trust{will-change:transform,opacity}

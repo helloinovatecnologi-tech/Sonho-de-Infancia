@@ -1,0 +1,44 @@
+:root{
+  --blue:#69bfe1;--blue-deep:#239fcf;--blue-soft:#e6f5fd;
+  --pink:#e38cb4;--pink-deep:#cf6597;--pink-soft:#fff1f7;
+  --yellow:#fbcf9d;--cream:#fbf9d8;--lilac:#bcb0ed;
+  --ink:#34475a;--muted:#6f8090;--white:#fff;
+  --container:1180px;--radius-sm:18px;--radius-md:28px;--radius-lg:46px;
+  --shadow:0 24px 70px rgba(54,91,120,.14);--shadow-soft:0 14px 40px rgba(54,91,120,.10);
+  --font-title:"Fredoka",sans-serif;--font-body:"Poppins",sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1)
+}
+
+/* Sprint 4.2 */
+.hero,
+section:first-of-type{
+    min-height:100vh;
+}
+
+.btn,
+.hero a{
+    transition:.3s ease;
+}
+
+.btn:hover,
+.hero a:hover{
+    transform:translateY(-4px);
+}
+
+/* Sprint 4.3 */
+.glass-header{
+ background:rgba(255,255,255,.18)!important;
+ backdrop-filter:blur(18px);
+ box-shadow:0 8px 30px rgba(0,0,0,.12);
+ transition:.35s;
+}
+.scroll-indicator{
+ position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+ font-size:34px;animation:bounce 1.6s infinite;z-index:999;
+}
+@keyframes bounce{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-8px)}}
+.hero::before,section:first-of-type::before{
+content:"";position:absolute;inset:0;
+background:linear-gradient(180deg,rgba(18,61,115,.35),rgba(18,61,115,.55));
+pointer-events:none;
+}
