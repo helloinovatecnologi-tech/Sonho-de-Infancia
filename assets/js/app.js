@@ -91,6 +91,19 @@
     window.addEventListener('resize', () => {
       if (window.innerWidth > 980) closeMenu();
     });
+    // Fecha o menu ao clicar fora dele
+document.addEventListener('click', (event) => {
+
+    if (!nav?.classList.contains('open')) return;
+
+    const clicouNoMenu = nav.contains(event.target);
+    const clicouNoBotao = menuButton?.contains(event.target);
+
+    if (!clicouNoMenu && !clicouNoBotao) {
+        closeMenu();
+    }
+
+});
 
     // Animações de entrada.
     const revealElements = [...document.querySelectorAll('.reveal')];
