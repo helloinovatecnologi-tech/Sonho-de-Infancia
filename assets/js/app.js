@@ -33,7 +33,7 @@
       document.documentElement.classList.add('hero-ready');
       const timeline = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.15 });
       timeline
-        .from('.header__inner', { y: -26, opacity: 0, duration: 0.8 })
+        .from('.header__inner', { y: -26, opacity: 0, duration: 0.8, clearProps: "transform" })
         .from('.hero__copy .eyebrow', { y: 18, opacity: 0, duration: 0.55 }, '-=0.35')
         .from('.hero__copy h1 span, .hero__copy h1 em', { y: 70, opacity: 0, rotate: 2, stagger: 0.09, duration: 0.85 }, '-=0.25')
         .from('.hero__copy > p', { y: 24, opacity: 0, duration: 0.6 }, '-=0.45')
