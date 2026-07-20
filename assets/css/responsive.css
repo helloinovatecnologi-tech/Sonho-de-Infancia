@@ -163,6 +163,7 @@
 
     .header.scrolled .header__inner{
         height:62px;
+        background:linear-gradient(135deg,var(--blue),var(--pink));    
     }
 
     .brand{
