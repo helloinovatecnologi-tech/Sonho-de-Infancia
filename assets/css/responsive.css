@@ -17,7 +17,9 @@
         top:0;
         right:0;
         bottom:0;
-        left:auto;
+        left:30%;
+
+        border-radius:20px;
 
         width:min(360px, 88vw);
         max-width:100%;
@@ -39,7 +41,7 @@
         overflow-y:auto;
         overscroll-behavior:contain;
 
-        background:rgba(255,255,255,.98);
+        background:linear-gradient(135deg,var(--blue),var(--pink));
 
         -webkit-backdrop-filter:blur(18px);
         backdrop-filter:blur(18px);
