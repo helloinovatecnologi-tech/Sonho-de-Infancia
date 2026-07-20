@@ -57,3 +57,487 @@ em{font-style:normal;color:var(--pink)}
 .split{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:90px}
 .split--reverse{grid-template-columns:.95fr 1.05fr}
 .glass{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);box-shadow:0 20px 50px rgba(23,70,98,.12);backdrop-filter:blur(18px)}
+/* =====================================================
+   ANIMATION KIT v1.0
+   Reutilize em qualquer elemento do projeto
+===================================================== */
+
+/* =====================================================
+   RESPIRAÇÃO PADRÃO
+===================================================== */
+
+.breathing{
+
+    animation:floatBreathing 4.5s ease-in-out infinite;
+
+    transform-origin:center;
+
+    will-change:transform;
+
+}
+
+@keyframes floatBreathing{
+
+    0%,100%{
+
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+    }
+
+    25%{
+
+        transform:
+            translateY(-2px)
+            rotate(.25deg);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-5px)
+            rotate(0deg);
+
+    }
+
+    75%{
+
+        transform:
+            translateY(-2px)
+            rotate(-.25deg);
+
+    }
+
+}
+
+/* =====================================================
+   VELOCIDADE
+===================================================== */
+
+.breathing--slow{
+
+    animation-duration:7s;
+
+}
+
+.breathing--fast{
+
+    animation-duration:2.5s;
+
+}
+
+.breathing--very-fast{
+
+    animation-duration:1.5s;
+
+}
+
+/* =====================================================
+   AMPLITUDE
+===================================================== */
+
+.breathing--strong{
+
+    animation-name:floatBreathingStrong;
+
+}
+
+@keyframes floatBreathingStrong{
+
+    0%,100%{
+
+        transform:
+            translateY(0);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-10px);
+
+    }
+
+}
+
+.breathing--soft{
+
+    animation-name:floatBreathingSoft;
+
+}
+
+@keyframes floatBreathingSoft{
+
+    0%,100%{
+
+        transform:
+            translateY(0);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-2px);
+
+    }
+
+}
+
+/* =====================================================
+   DELAYS
+===================================================== */
+
+.breathing--delay-1{
+
+    animation-delay:1s;
+
+}
+
+.breathing--delay-2{
+
+    animation-delay:2s;
+
+}
+
+.breathing--delay-3{
+
+    animation-delay:3s;
+
+}
+
+.breathing--delay-4{
+
+    animation-delay:4s;
+
+}
+
+.breathing--random{
+
+    animation-delay:-2.3s;
+
+}
+
+/* =====================================================
+   GLOW
+===================================================== */
+
+.breathing--glow{
+
+    filter:drop-shadow(0 10px 20px rgba(105,191,225,.18));
+
+    transition:
+        filter .35s;
+
+}
+
+.breathing--glow:hover{
+
+    filter:
+        drop-shadow(0 16px 30px rgba(244,113,168,.25));
+
+}
+
+/* =====================================================
+   GRADIENTE ANIMADO
+===================================================== */
+
+.gradient-live{
+
+    background-size:250% 250%;
+
+    animation:
+        gradientMove 6s linear infinite;
+
+}
+
+@keyframes gradientMove{
+
+    0%{
+
+        background-position:0% 50%;
+
+    }
+
+    50%{
+
+        background-position:100% 50%;
+
+    }
+
+    100%{
+
+        background-position:0% 50%;
+
+    }
+
+}
+
+/* =====================================================
+   LIQUID GLASS
+===================================================== */
+
+.liquid-glass{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.liquid-glass::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,.35),
+            transparent
+        );
+
+    transform:translateX(-120%);
+
+    transition:.8s;
+
+}
+
+.liquid-glass:hover::before{
+
+    transform:translateX(120%);
+
+}
+
+/* =====================================================
+   PULSE
+===================================================== */
+
+.pulse{
+
+    animation:
+        pulseAnimation 2.5s ease infinite;
+
+}
+
+@keyframes pulseAnimation{
+
+    0%,100%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.04);
+
+    }
+
+}
+
+/* =====================================================
+   PULSE FORTE
+===================================================== */
+
+.pulse--strong{
+
+    animation:
+        pulseStrong 1.8s ease infinite;
+
+}
+
+@keyframes pulseStrong{
+
+    0%,100%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.08);
+
+    }
+
+}
+
+/* =====================================================
+   FLOAT HORIZONTAL
+===================================================== */
+
+.float-horizontal{
+
+    animation:
+        floatHorizontal 6s ease-in-out infinite;
+
+}
+
+@keyframes floatHorizontal{
+
+    0%,100%{
+
+        transform:translateX(0);
+
+    }
+
+    50%{
+
+        transform:translateX(8px);
+
+    }
+
+}
+
+/* =====================================================
+   LEVITAÇÃO
+===================================================== */
+
+.levitate{
+
+    animation:
+        levitate 5s ease-in-out infinite;
+
+}
+
+@keyframes levitate{
+
+    0%,100%{
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-8px)
+            scale(1.02);
+
+    }
+
+}
+
+/* =====================================================
+   BALANÇO
+===================================================== */
+
+.swing{
+
+    animation:
+        swingAnimation 5s ease-in-out infinite;
+
+    transform-origin:center top;
+
+}
+
+@keyframes swingAnimation{
+
+    0%,100%{
+
+        transform:rotate(0deg);
+
+    }
+
+    25%{
+
+        transform:rotate(2deg);
+
+    }
+
+    75%{
+
+        transform:rotate(-2deg);
+
+    }
+
+}
+
+/* =====================================================
+   ROTAÇÃO LENTA
+===================================================== */
+
+.rotate-slow{
+
+    animation:
+        rotateSlow 25s linear infinite;
+
+}
+
+@keyframes rotateSlow{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* =====================================================
+   HOVER ZOOM
+===================================================== */
+
+.hover-grow{
+
+    transition:
+        transform .35s ease;
+
+}
+
+.hover-grow:hover{
+
+    transform:scale(1.08);
+
+}
+
+/* =====================================================
+   HOVER FLOAT
+===================================================== */
+
+.hover-float{
+
+    transition:
+        transform .35s ease;
+
+}
+
+.hover-float:hover{
+
+    transform:
+        translateY(-6px);
+
+}
+
+/* =====================================================
+   HOVER GLOW
+===================================================== */
+
+.hover-glow{
+
+    transition:
+        box-shadow .35s ease;
+
+}
+
+.hover-glow:hover{
+
+    box-shadow:
+        0 15px 40px rgba(105,191,225,.25);
+
+}
