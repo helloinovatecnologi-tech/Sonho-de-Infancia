@@ -355,4 +355,33 @@
     .lightbox__counter{
         bottom:12px;
     }
+    .brand-carousel{
+    width:100%;
+    max-width:100%;
+    }
+
+    .brand-carousel__viewport{
+        height:340px;
+
+        border-radius:22px;
+    }
+
+    .brand-carousel__slide{
+        padding:0px;
+    }
+
+    .brand-carousel__button{
+        width:40px;
+        height:40px;
+
+        font-size:30px;
+    }
+
+    .brand-carousel__button--prev{
+        left:8px;
+    }
+
+    .brand-carousel__button--next{
+        right:8px;
+    }
 }

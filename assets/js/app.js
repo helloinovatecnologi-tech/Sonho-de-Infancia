@@ -163,17 +163,6 @@ const albums = {
             alt: 'Outra visão do berçário'
         }
     ],
-    experiencia:[
-        {
-          src: 'assets/img/Uniforme1.png',
-          alt: 'Uniforme da escola'
-        },
-        {
-          src: 'assets/img/instagran.jpeg',
-          alt: 'instagran da escola'
-        },
-
-    ],
 
     atelie: [
         {
@@ -520,3 +509,104 @@ window.addEventListener('keydown', (event) => {
     });
   });
 })();
+const brandCarousel = document.querySelector('.brand-carousel');
+
+if (brandCarousel) {
+
+    const track = brandCarousel.querySelector('.brand-carousel__track');
+
+    const slides = brandCarousel.querySelectorAll(
+        '.brand-carousel__slide'
+    );
+
+    const previousButton = brandCarousel.querySelector(
+        '.brand-carousel__button--prev'
+    );
+
+    const nextButton = brandCarousel.querySelector(
+        '.brand-carousel__button--next'
+    );
+
+    const dots = brandCarousel.querySelectorAll(
+        '.brand-carousel__dot'
+    );
+
+    let currentSlide = 0;
+
+    const updateBrandCarousel = () => {
+
+        track.style.transform =
+            `translateX(-${currentSlide * 100}%)`;
+
+        dots.forEach((dot, index) => {
+
+            dot.classList.toggle(
+                'active',
+                index === currentSlide
+            );
+
+        });
+
+    };
+
+    const showNextSlide = () => {
+
+        currentSlide++;
+
+        if (currentSlide >= slides.length) {
+            currentSlide = 0;
+        }
+
+        updateBrandCarousel();
+
+    };
+
+    const showPreviousSlide = () => {
+
+        currentSlide--;
+
+        if (currentSlide < 0) {
+            currentSlide = slides.length - 1;
+        }
+
+        updateBrandCarousel();
+
+    };
+
+    nextButton?.addEventListener(
+        'click',
+        showNextSlide
+    );
+
+    previousButton?.addEventListener(
+        'click',
+        showPreviousSlide
+    );
+
+    dots.forEach((dot, index) => {
+
+        dot.addEventListener('click', () => {
+
+            currentSlide = index;
+
+            updateBrandCarousel();
+
+        });
+
+    });
+
+    let autoplay = setInterval(showNextSlide, 3000);
+
+    brandCarousel.addEventListener('mouseenter', () => {
+
+        clearInterval(autoplay);
+
+    });
+
+    brandCarousel.addEventListener('mouseleave', () => {
+
+        autoplay = setInterval(showNextSlide, 3000);
+
+    });
+
+}
