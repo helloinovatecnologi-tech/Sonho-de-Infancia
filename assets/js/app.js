@@ -504,20 +504,37 @@ window.addEventListener('keydown', (event) => {
       });
     });
 
-    backToTop?.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+backToTop?.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
     });
-  });
-})();
+});
+
+
+/* ======================================================
+   CARROSSEL DA IDENTIDADE VISUAL
+====================================================== */
+
 const brandCarousel = document.querySelector('.brand-carousel');
 
-if (brandCarousel) {
+  if (brandCarousel) {
 
-    const track = brandCarousel.querySelector('.brand-carousel__track');
-
-    const slides = brandCarousel.querySelectorAll(
-        '.brand-carousel__slide'
+    const track = brandCarousel.querySelector(
+        '.brand-carousel__track'
     );
+
+    const slides = [
+        ...brandCarousel.querySelectorAll(
+            '.brand-carousel__slide'
+        )
+    ];
+
+    const carouselImages = [
+        ...brandCarousel.querySelectorAll(
+            '.brand-carousel__slide img'
+        )
+    ];
 
     const previousButton = brandCarousel.querySelector(
         '.brand-carousel__button--prev'
@@ -527,13 +544,18 @@ if (brandCarousel) {
         '.brand-carousel__button--next'
     );
 
-    const dots = brandCarousel.querySelectorAll(
-        '.brand-carousel__dot'
-    );
+    const dots = [
+        ...brandCarousel.querySelectorAll(
+            '.brand-carousel__dot'
+        )
+    ];
 
     let currentSlide = 0;
+    let autoplay = null;
 
     const updateBrandCarousel = () => {
+
+        if (!track || slides.length === 0) return;
 
         track.style.transform =
             `translateX(-${currentSlide * 100}%)`;
@@ -551,11 +573,8 @@ if (brandCarousel) {
 
     const showNextSlide = () => {
 
-        currentSlide++;
-
-        if (currentSlide >= slides.length) {
-            currentSlide = 0;
-        }
+        currentSlide =
+            (currentSlide + 1) % slides.length;
 
         updateBrandCarousel();
 
@@ -563,11 +582,9 @@ if (brandCarousel) {
 
     const showPreviousSlide = () => {
 
-        currentSlide--;
-
-        if (currentSlide < 0) {
-            currentSlide = slides.length - 1;
-        }
+        currentSlide =
+            (currentSlide - 1 + slides.length)
+            % slides.length;
 
         updateBrandCarousel();
 
@@ -588,25 +605,96 @@ if (brandCarousel) {
         dot.addEventListener('click', () => {
 
             currentSlide = index;
-
             updateBrandCarousel();
 
         });
 
     });
 
-    let autoplay = setInterval(showNextSlide, 3000);
 
-    brandCarousel.addEventListener('mouseenter', () => {
+    /* Monta o álbum usando as próprias imagens do carrossel */
+
+    const carouselAlbum = carouselImages.map((image) => ({
+        src: image.getAttribute('src'),
+        alt: image.getAttribute('alt') || ''
+    }));
+
+
+    /* Abre a imagem clicada no lightbox */
+
+    carouselImages.forEach((image, index) => {
+
+        image.setAttribute('tabindex', '0');
+        image.setAttribute('role', 'button');
+
+        const openCarouselImage = () => {
+
+            openLightbox(
+                carouselAlbum,
+                index
+            );
+
+        };
+
+        image.addEventListener(
+            'click',
+            openCarouselImage
+        );
+
+        image.addEventListener('keydown', (event) => {
+
+            if (
+                event.key !== 'Enter' &&
+                event.key !== ' '
+            ) {
+                return;
+            }
+
+            event.preventDefault();
+            openCarouselImage();
+
+        });
+
+    });
+
+
+    /* Autoplay */
+
+    const startAutoplay = () => {
 
         clearInterval(autoplay);
 
-    });
+        autoplay = setInterval(
+            showNextSlide,
+            3000
+        );
 
-    brandCarousel.addEventListener('mouseleave', () => {
+    };
 
-        autoplay = setInterval(showNextSlide, 3000);
+    const stopAutoplay = () => {
 
-    });
+        clearInterval(autoplay);
+        autoplay = null;
 
-}
+    };
+
+    brandCarousel.addEventListener(
+        'mouseenter',
+        stopAutoplay
+    );
+
+    brandCarousel.addEventListener(
+        'mouseleave',
+        startAutoplay
+    );
+
+    updateBrandCarousel();
+    startAutoplay();
+
+  }
+  });
+})();
+
+const brandCarousel = document.querySelector('.brand-carousel');
+
+

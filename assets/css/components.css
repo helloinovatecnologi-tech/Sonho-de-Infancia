@@ -536,6 +536,8 @@ body.lightbox-open{
 
 .brand-carousel__slide img{
     display:block;
+    cursor: zoom-in;
+
 
     width:100%;
     height:100%;
