@@ -9,6 +9,8 @@
     }
   };
 
+
+
   onReady(() => {
     const body = document.body;
     const header = document.querySelector('.header');
@@ -145,45 +147,274 @@ document.addEventListener('click', (event) => {
     updateParallax();
 
     // Lightbox da galeria.
-    const lightbox = document.querySelector('.lightbox');
-    const lightboxImage = lightbox?.querySelector('img');
-    const lightboxClose = lightbox?.querySelector('button');
+// ======================================================
+// ÁLBUNS DA GALERIA
+// ======================================================
 
-    const closeLightbox = () => {
-      lightbox?.classList.remove('open');
-      body.classList.remove('lightbox-open');
+const albums = {
+
+    bercario: [
+        {
+            src: 'assets/img/bercario.jpeg',
+            alt: 'Berçário'
+        },
+        {
+            src: 'assets/img/bercario1.jpeg',
+            alt: 'Outra visão do berçário'
+        }
+    ],
+
+    atelie: [
+        {
+            src: 'assets/img/Sala Atelie.jpeg',
+            alt: 'Sala Ateliê'
+        }
+    ],
+
+    maternal: [
+        {
+            src: 'assets/img/Sala Maternal.jpeg',
+            alt: 'Sala Maternal'
+        },
+        {
+            src: 'assets/img/Sala Maternal2.jpeg',
+            alt: 'Outra visão da Sala Maternal'
+        }
+    ]
+
+};
+
+
+// ======================================================
+// ELEMENTOS DO LIGHTBOX
+// ======================================================
+
+const lightbox = document.querySelector('.lightbox');
+const lightboxImage = lightbox?.querySelector('.lightbox__image');
+const lightboxClose = lightbox?.querySelector('.lightbox__close');
+const lightboxPrev = lightbox?.querySelector('.lightbox__prev');
+const lightboxNext = lightbox?.querySelector('.lightbox__next');
+const lightboxCounter = lightbox?.querySelector('.lightbox__counter');
+
+let currentAlbum = [];
+let currentImageIndex = 0;
+
+
+// ======================================================
+// MOSTRAR IMAGEM ATUAL
+// ======================================================
+
+const showCurrentImage = () => {
+
+    if (!lightboxImage || currentAlbum.length === 0) return;
+
+    const currentImage = currentAlbum[currentImageIndex];
+
+    lightboxImage.src = currentImage.src;
+    lightboxImage.alt = currentImage.alt || '';
+
+    if (lightboxCounter) {
+
+        lightboxCounter.textContent =
+            `${currentImageIndex + 1} de ${currentAlbum.length}`;
+
+    }
+
+    const hasMultipleImages = currentAlbum.length > 1;
+
+    if (lightboxPrev) {
+        lightboxPrev.hidden = !hasMultipleImages;
+    }
+
+    if (lightboxNext) {
+        lightboxNext.hidden = !hasMultipleImages;
+    }
+
+};
+
+
+// ======================================================
+// ABRIR LIGHTBOX
+// ======================================================
+
+const openLightbox = (images, startIndex = 0) => {
+
+    if (!lightbox || !lightboxImage || !images?.length) return;
+
+    currentAlbum = images;
+    currentImageIndex = startIndex;
+
+    showCurrentImage();
+
+    lightbox.classList.add('open');
+    body.classList.add('lightbox-open');
+
+    lightboxClose?.focus();
+
+};
+
+
+// ======================================================
+// FECHAR LIGHTBOX
+// ======================================================
+
+const closeLightbox = () => {
+
+    lightbox?.classList.remove('open');
+    body.classList.remove('lightbox-open');
+
+    currentAlbum = [];
+    currentImageIndex = 0;
+
+    if (lightboxImage) {
+        lightboxImage.src = '';
+        lightboxImage.alt = '';
+    }
+
+};
+
+
+// ======================================================
+// PRÓXIMA IMAGEM
+// ======================================================
+
+const showNextImage = () => {
+
+    if (currentAlbum.length <= 1) return;
+
+    currentImageIndex =
+        (currentImageIndex + 1) % currentAlbum.length;
+
+    showCurrentImage();
+
+};
+
+
+// ======================================================
+// IMAGEM ANTERIOR
+// ======================================================
+
+const showPreviousImage = () => {
+
+    if (currentAlbum.length <= 1) return;
+
+    currentImageIndex =
+        (currentImageIndex - 1 + currentAlbum.length)
+        % currentAlbum.length;
+
+    showCurrentImage();
+
+};
+
+
+// ======================================================
+// CARDS DA GALERIA
+// ======================================================
+
+document.querySelectorAll('[data-lightbox]').forEach((item) => {
+
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('role', 'button');
+
+    const openItem = () => {
+
+        const albumName = item.dataset.album;
+        const source = item.querySelector('img');
+
+        /*
+         * Caso o card tenha data-album, abre todas
+         * as imagens cadastradas no álbum.
+         */
+        if (albumName && albums[albumName]) {
+
+            openLightbox(albums[albumName]);
+
+            return;
+
+        }
+
+        /*
+         * Caso não tenha álbum, abre somente
+         * a imagem existente no card.
+         */
+        if (!source) return;
+
+        openLightbox([
+            {
+                src: source.currentSrc || source.src,
+                alt: source.alt || ''
+            }
+        ]);
+
     };
 
-    document.querySelectorAll('[data-lightbox]').forEach((item) => {
-      item.setAttribute('tabindex', '0');
-      item.setAttribute('role', 'button');
+    item.addEventListener('click', openItem);
 
-      const openLightbox = () => {
-        const source = item.querySelector('img');
-        if (!lightbox || !lightboxImage || !source) return;
-        lightboxImage.src = source.currentSrc || source.src;
-        lightboxImage.alt = source.alt;
-        lightbox.classList.add('open');
-        body.classList.add('lightbox-open');
-        lightboxClose?.focus();
-      };
+    item.addEventListener('keydown', (event) => {
 
-      item.addEventListener('click', openLightbox);
-      item.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          openLightbox();
-        }
-      });
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+
+        event.preventDefault();
+
+        openItem();
+
     });
 
-    lightboxClose?.addEventListener('click', closeLightbox);
-    lightbox?.addEventListener('click', (event) => {
-      if (event.target === lightbox) closeLightbox();
-    });
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeLightbox();
-    });
+});
+
+
+// ======================================================
+// CONTROLES
+// ======================================================
+
+lightboxClose?.addEventListener('click', closeLightbox);
+
+lightboxNext?.addEventListener('click', (event) => {
+
+    event.stopPropagation();
+
+    showNextImage();
+
+});
+
+lightboxPrev?.addEventListener('click', (event) => {
+
+    event.stopPropagation();
+
+    showPreviousImage();
+
+});
+
+lightbox?.addEventListener('click', (event) => {
+
+    if (event.target === lightbox) {
+        closeLightbox();
+    }
+
+});
+
+
+// ======================================================
+// CONTROLE PELO TECLADO
+// ======================================================
+
+window.addEventListener('keydown', (event) => {
+
+    if (!lightbox?.classList.contains('open')) return;
+
+    if (event.key === 'Escape') {
+        closeLightbox();
+    }
+
+    if (event.key === 'ArrowRight') {
+        showNextImage();
+    }
+
+    if (event.key === 'ArrowLeft') {
+        showPreviousImage();
+    }
+
+});
 
     // FAQ: mantém somente uma pergunta aberta.
     document.querySelectorAll('.accordion details').forEach((detail) => {

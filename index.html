@@ -151,10 +151,11 @@
       <div class="container">
         <header class="section-heading reveal"><span class="eyebrow">Conheça por dentro</span><h2>Espaços feitos para acolher e inspirar</h2><p>Ambientes claros, organizados e cheios de identidade.</p></header>
         <div class="gallery">
-          <figure class="gallery__item gallery__item--wide reveal" data-lightbox><img src="assets/img/sala-01.jpg" alt="Sala de atividades" loading="lazy"><figcaption>Sala de atividades</figcaption></figure>
-          <figure class="gallery__item gallery__item--tall reveal" data-lightbox><img src="assets/img/sala-02.jpg" alt="Ambiente interno" loading="lazy"><figcaption>Ambiente acolhedor</figcaption></figure>
-          <figure class="gallery__item reveal" data-lightbox><img src="assets/img/fachada.jpg" alt="Fachada" loading="lazy"><figcaption>Nossa fachada</figcaption></figure>
-          <figure class="gallery__item reveal" data-lightbox><img src="assets/img/submarca-criancas.jpg" alt="Crianças brincando" loading="lazy"><figcaption>Infância em movimento</figcaption></figure>
+          <figure class="gallery__item gallery__item--wide reveal" data-lightbox><img src="assets/img/Sala Atelie.jpeg" alt="Atelie" loading="lazy"><figcaption>Ateliê</figcaption></figure>
+          <figure class="gallery__item gallery__item--tall reveal" data-lightbox><img src="assets/img/Sala Maternal.jpeg" alt="Maternal" loading="lazy"><figcaption>Maternal</figcaption></figure>
+          <figure class="gallery__item reveal" data-lightbox><img src="assets/img/Parquinho Recreação e Contra-turno.jpeg" alt="Parquinho e Contra-Turno" loading="lazy"><figcaption>Parquinho e Contra-Turno</figcaption></figure>
+          <!--<figure class="gallery__item reveal" data-lightbox><img src="assets/img/submarca-criancas.jpg" alt="Crianças brincando" loading="lazy"><figcaption>Berçario</figcaption></figure>-->
+          <figure class="gallery__item reveal" data-lightbox data-album="bercario"><img src="assets/img/bercario.jpeg" alt="Berçário" loading="lazy"><figcaption>Berçário<br><span>2 fotos</span></figcaption></figure>      
         </div>
       </div>
     </section>
@@ -195,8 +196,46 @@
 
   <a class="whatsapp breathing" href="https://wa.me/5511973241165?text=Olá!%20Gostaria%20de%20mais%20informações." target="_blank" rel="noopener" aria-label="WhatsApp">✆</a>
   <button class="back-to-top breathing" type="button" aria-label="Voltar ao topo">↑</button>
-  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Visualização da imagem"><button type="button" aria-label="Fechar">×</button><img src="" alt=""></div>
+  <div
+      class="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Galeria de imagens"
+  >
+      <button
+          class="lightbox__close"
+          type="button"
+          aria-label="Fechar galeria"
+      >
+          ×
+      </button>
 
+      <button
+          class="lightbox__prev"
+          type="button"
+          aria-label="Imagem anterior"
+      >
+          ‹
+      </button>
+
+      <div class="lightbox__content">
+          <img
+              class="lightbox__image"
+              src=""
+              alt=""
+          >
+
+          <span class="lightbox__counter"></span>
+      </div>
+
+      <button
+          class="lightbox__next"
+          type="button"
+          aria-label="Próxima imagem"
+      >
+          ›
+      </button>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
