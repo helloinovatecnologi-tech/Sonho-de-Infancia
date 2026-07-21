@@ -10,6 +10,9 @@ html{
     scroll-behavior:smooth;
     overflow-x:clip;
 }
+h2{
+    color:#8ed7f3;
+}
 
 body{
     width:100%;

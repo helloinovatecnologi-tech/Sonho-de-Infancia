@@ -163,6 +163,17 @@ const albums = {
             alt: 'Outra visão do berçário'
         }
     ],
+    experiencia:[
+        {
+          src: 'assets/img/Uniforme1.png',
+          alt: 'Uniforme da escola'
+        },
+        {
+          src: 'assets/img/instagran.jpeg',
+          alt: 'instagran da escola'
+        },
+
+    ],
 
     atelie: [
         {
@@ -319,7 +330,7 @@ document.querySelectorAll('[data-lightbox]').forEach((item) => {
     const openItem = () => {
 
         const albumName = item.dataset.album;
-        const source = item.querySelector('img');
+        const source = item.tagName === "IMG" ? item : item.querySelector("img");
 
         /*
          * Caso o card tenha data-album, abre todas
@@ -327,7 +338,20 @@ document.querySelectorAll('[data-lightbox]').forEach((item) => {
          */
         if (albumName && albums[albumName]) {
 
-            openLightbox(albums[albumName]);
+            const album = albums[albumName];
+
+            const clickedImage = source.getAttribute("src");
+
+            const clickedIndex = album.findIndex(image => {
+
+                return image.src.split('/').pop() === clickedImage.split('/').pop();
+
+            });
+
+            openLightbox(
+                album,
+                clickedIndex >= 0 ? clickedIndex : 0
+            );
 
             return;
 
