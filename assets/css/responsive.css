@@ -4,6 +4,10 @@
 
 @media (max-width:1024px){
 
+    .partners__grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
     .menu-button{
         position:relative;
         
@@ -392,9 +396,42 @@
     .brand-carousel__button--next{
         right:8px;
     }
+
+    .partners__grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:12px;
+    }
+
+    .partner-card{
+        padding:18px 10px;
+        border-radius:22px;
+    }
+
+    .partner-card__logo{
+        width:82px;
+        height:82px;
+
+        padding:4px;
+
+        border-radius:19px;
+    }
+
+    .partner-card__content{
+        margin-top:14px;
+    }
+
+    .partner-card__content h3{
+        font-size:.95rem;
+    }
+
+    .partner-card__content span{
+        font-size:.64rem;
+    }
     .footer{
 
     padding:0px 0 35px;
+        background-color: #fff1f7;
+
 
     }
 
