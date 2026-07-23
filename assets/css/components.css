@@ -454,7 +454,7 @@ body.lightbox-open{
     border-radius:999px;
     border:0;
 
-    background:linear-gradient(135deg,var(--pink),var(--blue));
+    background:linear-gradient(135deg,var(--blue),var(--pink));
 
     cursor:pointer;
 
