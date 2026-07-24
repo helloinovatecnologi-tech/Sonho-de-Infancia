@@ -180,6 +180,47 @@ const albums = {
             src: 'assets/img/Sala Maternal2.jpeg',
             alt: 'Outra visão da Sala Maternal'
         }
+    ],
+    avaliacoes:[
+
+        {
+            src:"assets/img/avaliacoes/1.png"
+        },
+
+        {
+            src:"assets/img/avaliacoes/2.png"
+        },
+
+        {
+            src:"assets/img/avaliacoes/3.png"
+        },
+
+        {
+            src:"assets/img/avaliacoes/4.png"
+        },
+                {
+            src:"assets/img/avaliacoes/5.png"
+        },
+
+        {
+            src:"assets/img/avaliacoes/6.png"
+        },
+
+        {
+            src:"assets/img/avaliacoes/7.png"
+        },
+                {
+            src:"assets/img/avaliacoes/8.png"
+        },
+
+        {
+            src:"assets/img/avaliacoes/9.png"
+        },
+
+        {
+            src:"assets/img/avaliacoes/10.png"
+        }
+
     ]
 
 };
@@ -692,9 +733,383 @@ const brandCarousel = document.querySelector('.brand-carousel');
     startAutoplay();
 
   }
+
+  const testimonialsCarousel = document.querySelector(".testimonials-carousel");
+
+    if (testimonialsCarousel) {
+
+        const viewport = testimonialsCarousel.querySelector(
+            ".testimonials-carousel__viewport"
+        );
+
+        const track = testimonialsCarousel.querySelector(
+            ".testimonials-carousel__track"
+        );
+
+        const prevButton = testimonialsCarousel.querySelector(
+            ".testimonials-carousel__button--prev"
+        );
+
+        const nextButton = testimonialsCarousel.querySelector(
+            ".testimonials-carousel__button--next"
+        );
+
+        const originalSlides = Array.from(
+            track.querySelectorAll(".testimonial-slide")
+        );
+
+        let visibleSlides = getVisibleSlides();
+        let currentIndex = visibleSlides;
+        let autoplayInterval = null;
+        let isTransitioning = false;
+
+        let pointerStartX = 0;
+        let pointerCurrentX = 0;
+        let isDragging = false;
+
+        function getGap(){
+
+            return window.innerWidth <= 680 ? 0 : 20;
+
+        }
+        const autoplayTime = 3500;
+
+        function getVisibleSlides() {
+
+            if (window.innerWidth <= 680) {
+                return 1;
+            }
+
+            if (window.innerWidth <= 1024) {
+                return 2;
+            }
+
+            return 4;
+        }
+
+        function createInfiniteSlides() {
+
+            track.innerHTML = "";
+
+            visibleSlides = Math.min(
+                getVisibleSlides(),
+                originalSlides.length
+            );
+
+            const clonesBefore = originalSlides
+                .slice(-visibleSlides)
+                .map((slide) => {
+                    const clone = slide.cloneNode(true);
+                    clone.classList.add("testimonial-slide--clone");
+                    return clone;
+                });
+
+            const originalCopies = originalSlides.map((slide) =>
+                slide.cloneNode(true)
+            );
+
+            const clonesAfter = originalSlides
+                .slice(0, visibleSlides)
+                .map((slide) => {
+                    const clone = slide.cloneNode(true);
+                    clone.classList.add("testimonial-slide--clone");
+                    return clone;
+                });
+
+            [...clonesBefore, ...originalCopies, ...clonesAfter]
+                .forEach((slide) => track.appendChild(slide));
+
+            currentIndex = visibleSlides;
+
+            updateSlideWidth();
+            moveTrack(false);
+
+            reconnectLightbox();
+        }
+
+        function updateSlideWidth() {
+
+            const viewportWidth = viewport.offsetWidth;
+
+            let slideWidth;
+
+            if (visibleSlides === 1) {
+
+                slideWidth = viewportWidth;
+
+            } else {
+
+                const totalGap = gap * (visibleSlides - 1);
+
+                slideWidth =
+                    (viewportWidth - totalGap) / visibleSlides;
+
+            }
+
+            track.querySelectorAll(".testimonial-slide")
+                .forEach((slide) => {
+
+                    slide.style.flex = `0 0 ${slideWidth}px`;
+
+                });
+
+        }
+
+        function getSlideDistance(){
+
+            const firstSlide =
+                track.querySelector(".testimonial-slide");
+
+            if(!firstSlide) return 0;
+
+            return firstSlide.offsetWidth + getGap();
+
+        }
+
+        function moveTrack(withTransition = true) {
+
+            if (withTransition) {
+                track.style.transition =
+                    "transform .45s var(--ease)";
+            } else {
+                track.style.transition = "none";
+            }
+
+            const distance =
+                currentIndex * getSlideDistance();
+
+            track.style.transform =
+                `translateX(-${distance}px)`;
+        }
+
+        function nextSlide() {
+
+            if (isTransitioning || originalSlides.length <= visibleSlides) {
+                return;
+            }
+
+            isTransitioning = true;
+            currentIndex++;
+
+            moveTrack(true);
+        }
+
+        function previousSlide() {
+
+            if (isTransitioning || originalSlides.length <= visibleSlides) {
+                return;
+            }
+
+            isTransitioning = true;
+            currentIndex -= visibleSlides;
+
+            moveTrack(true);
+        }
+
+        function correctInfinitePosition() {
+
+            const originalLength = originalSlides.length;
+
+            if (currentIndex >= originalLength + visibleSlides) {
+
+                currentIndex =
+                    currentIndex - originalLength;
+
+                moveTrack(false);
+
+            } else if (currentIndex < visibleSlides) {
+
+                currentIndex =
+                    currentIndex + originalLength;
+
+                moveTrack(false);
+            }
+
+            isTransitioning = false;
+        }
+
+        function startAutoplay() {
+
+            stopAutoplay();
+
+            if (originalSlides.length <= visibleSlides) {
+                return;
+            }
+
+            autoplayInterval = setInterval(
+                nextSlide,
+                autoplayTime
+            );
+        }
+
+        function stopAutoplay() {
+
+            if (autoplayInterval) {
+
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+
+            }
+        }
+
+        function restartAutoplay() {
+
+            stopAutoplay();
+            startAutoplay();
+        }
+
+        function reconnectLightbox() {
+
+            const images = track.querySelectorAll(".testimonial-slide img");
+
+            images.forEach((image) => {
+
+                image.addEventListener("click", () => {
+
+                    const src = image.getAttribute("src");
+
+                    const index = albums.avaliacoes.findIndex(item =>
+                        item.src === src
+                    );
+
+                    if (index >= 0) {
+
+                        openLightbox(albums.avaliacoes, index);
+
+                    }
+
+                });
+
+            });
+
+        }
+
+        function handlePointerDown(event) {
+
+            if (originalSlides.length <= visibleSlides) {
+                return;
+            }
+
+            isDragging = true;
+
+            pointerStartX =
+                event.clientX ?? event.touches?.[0]?.clientX;
+
+            pointerCurrentX = pointerStartX;
+
+            stopAutoplay();
+
+            track.style.transition = "none";
+        }
+
+        function handlePointerMove(event) {
+
+            if (!isDragging) {
+                return;
+            }
+
+            pointerCurrentX =
+                event.clientX ?? event.touches?.[0]?.clientX;
+
+            const movement =
+                pointerCurrentX - pointerStartX;
+
+            const basePosition =
+                currentIndex * getSlideDistance();
+
+            track.style.transform =
+                `translateX(${movement - basePosition}px)`;
+        }
+
+        function handlePointerUp() {
+
+            if (!isDragging) {
+                return;
+            }
+
+            isDragging = false;
+
+            const movement =
+                pointerCurrentX - pointerStartX;
+
+            const minimumMovement = 50;
+
+            if (movement <= -minimumMovement) {
+
+                nextSlide();
+
+            } else if (movement >= minimumMovement) {
+
+                previousSlide();
+
+            } else {
+
+                moveTrack(true);
+            }
+
+            restartAutoplay();
+        }
+
+        nextButton?.addEventListener("click", () => {
+
+            nextSlide();
+            restartAutoplay();
+
+        });
+
+        prevButton?.addEventListener("click", () => {
+
+            previousSlide();
+            restartAutoplay();
+
+        });
+
+        track.addEventListener(
+            "transitionend",
+            correctInfinitePosition
+        );
+
+        viewport.addEventListener(
+            "pointerdown",
+            handlePointerDown
+        );
+
+        window.addEventListener(
+            "pointermove",
+            handlePointerMove
+        );
+
+        window.addEventListener(
+            "pointerup",
+            handlePointerUp
+        );
+
+        testimonialsCarousel.addEventListener(
+            "mouseenter",
+            stopAutoplay
+        );
+
+        testimonialsCarousel.addEventListener(
+            "mouseleave",
+            startAutoplay
+        );
+
+        let resizeTimeout;
+
+        window.addEventListener("resize", () => {
+
+            clearTimeout(resizeTimeout);
+
+            resizeTimeout = setTimeout(() => {
+
+                createInfiniteSlides();
+                startAutoplay();
+
+            }, 200);
+        });
+
+        createInfiniteSlides();
+        startAutoplay();
+    }
   });
 })();
-
-const brandCarousel = document.querySelector('.brand-carousel');
-
-
