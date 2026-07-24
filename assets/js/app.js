@@ -734,7 +734,12 @@ const brandCarousel = document.querySelector('.brand-carousel');
 
   }
 
-  const testimonialsCarousel = document.querySelector(".testimonials-carousel");
+  /* ======================================================
+    CARROSSEL DE AVALIAÇÕES
+    ====================================================== */
+
+    const testimonialsCarousel =
+        document.querySelector(".testimonials-carousel");
 
     if (testimonialsCarousel) {
 
@@ -754,301 +759,278 @@ const brandCarousel = document.querySelector('.brand-carousel');
             ".testimonials-carousel__button--next"
         );
 
-        const originalSlides = Array.from(
+        const dotsContainer = testimonialsCarousel.querySelector(
+            ".testimonials-carousel__dots"
+        );
+
+        const slides = Array.from(
             track.querySelectorAll(".testimonial-slide")
         );
 
-        let visibleSlides = getVisibleSlides();
-        let currentIndex = visibleSlides;
         let autoplayInterval = null;
-        let isTransitioning = false;
+        let scrollTimeout = null;
 
-        let pointerStartX = 0;
-        let pointerCurrentX = 0;
-        let isDragging = false;
-
-        function getGap(){
-
-            return window.innerWidth <= 680 ? 0 : 20;
-
-        }
         const autoplayTime = 3500;
 
-        function getVisibleSlides() {
+        /* ==========================================
+        PREPARA OS SLIDES
+        ========================================== */
 
-            if (window.innerWidth <= 680) {
-                return 1;
-            }
+        slides.forEach((slide, index) => {
 
-            if (window.innerWidth <= 1024) {
-                return 2;
-            }
+            slide.dataset.index = String(index);
 
-            return 4;
-        }
+            const image = slide.querySelector("img");
 
-        function createInfiniteSlides() {
+            if (!image) return;
 
-            track.innerHTML = "";
-
-            visibleSlides = Math.min(
-                getVisibleSlides(),
-                originalSlides.length
+            image.dataset.index = String(index);
+            image.setAttribute("tabindex", "0");
+            image.setAttribute("role", "button");
+            image.setAttribute(
+                "aria-label",
+                `Ampliar avaliação ${index + 1}`
             );
 
-            const clonesBefore = originalSlides
-                .slice(-visibleSlides)
-                .map((slide) => {
-                    const clone = slide.cloneNode(true);
-                    clone.classList.add("testimonial-slide--clone");
-                    return clone;
-                });
+        });
 
-            const originalCopies = originalSlides.map((slide) =>
-                slide.cloneNode(true)
-            );
+        /* ==========================================
+        TAMANHO DO PASSO
+        ========================================== */
 
-            const clonesAfter = originalSlides
-                .slice(0, visibleSlides)
-                .map((slide) => {
-                    const clone = slide.cloneNode(true);
-                    clone.classList.add("testimonial-slide--clone");
-                    return clone;
-                });
-
-            [...clonesBefore, ...originalCopies, ...clonesAfter]
-                .forEach((slide) => track.appendChild(slide));
-
-            currentIndex = visibleSlides;
-
-            updateSlideWidth();
-            moveTrack(false);
-
-            reconnectLightbox();
-        }
-
-        function updateSlideWidth() {
-
-            const viewportWidth = viewport.offsetWidth;
-
-            let slideWidth;
-
-            if (visibleSlides === 1) {
-
-                slideWidth = viewportWidth;
-
-            } else {
-
-                const totalGap = gap * (visibleSlides - 1);
-
-                slideWidth =
-                    (viewportWidth - totalGap) / visibleSlides;
-
-            }
-
-            track.querySelectorAll(".testimonial-slide")
-                .forEach((slide) => {
-
-                    slide.style.flex = `0 0 ${slideWidth}px`;
-
-                });
-
-        }
-
-        function getSlideDistance(){
+        function getScrollStep() {
 
             const firstSlide =
                 track.querySelector(".testimonial-slide");
 
-            if(!firstSlide) return 0;
+            if (!firstSlide) return viewport.clientWidth;
 
-            return firstSlide.offsetWidth + getGap();
+            const trackStyles = window.getComputedStyle(track);
+
+            const gap =
+                Number.parseFloat(trackStyles.columnGap) ||
+                Number.parseFloat(trackStyles.gap) ||
+                0;
+
+            return firstSlide.getBoundingClientRect().width + gap;
 
         }
 
-        function moveTrack(withTransition = true) {
+        /* ==========================================
+        ÍNDICE ATUAL
+        ========================================== */
 
-            if (withTransition) {
-                track.style.transition =
-                    "transform .45s var(--ease)";
-            } else {
-                track.style.transition = "none";
-            }
+        function getCurrentIndex() {
 
-            const distance =
-                currentIndex * getSlideDistance();
+            const step = getScrollStep();
 
-            track.style.transform =
-                `translateX(-${distance}px)`;
+            if (!step) return 0;
+
+            return Math.round(viewport.scrollLeft / step);
+
+        }
+
+        /* ==========================================
+        NAVEGAÇÃO
+        ========================================== */
+
+        function goToSlide(index, smooth = true) {
+
+            if (!slides.length) return;
+
+            const normalizedIndex =
+                (index + slides.length) % slides.length;
+
+            viewport.scrollTo({
+                left: normalizedIndex * getScrollStep(),
+                behavior: smooth ? "smooth" : "auto"
+            });
+
         }
 
         function nextSlide() {
 
-            if (isTransitioning || originalSlides.length <= visibleSlides) {
+            const currentIndex = getCurrentIndex();
+
+            if (currentIndex >= slides.length - 1) {
+
+                goToSlide(0);
+
                 return;
+
             }
 
-            isTransitioning = true;
-            currentIndex++;
+            goToSlide(currentIndex + 1);
 
-            moveTrack(true);
         }
 
         function previousSlide() {
 
-            if (isTransitioning || originalSlides.length <= visibleSlides) {
+            const currentIndex = getCurrentIndex();
+
+            if (currentIndex <= 0) {
+
+                goToSlide(slides.length - 1);
+
                 return;
+
             }
 
-            isTransitioning = true;
-            currentIndex -= visibleSlides;
+            goToSlide(currentIndex - 1);
 
-            moveTrack(true);
         }
 
-        function correctInfinitePosition() {
+        /* ==========================================
+        AUTOPLAY
+        ========================================== */
 
-            const originalLength = originalSlides.length;
+        function stopAutoplay() {
 
-            if (currentIndex >= originalLength + visibleSlides) {
+            if (!autoplayInterval) return;
 
-                currentIndex =
-                    currentIndex - originalLength;
+            clearInterval(autoplayInterval);
+            autoplayInterval = null;
 
-                moveTrack(false);
-
-            } else if (currentIndex < visibleSlides) {
-
-                currentIndex =
-                    currentIndex + originalLength;
-
-                moveTrack(false);
-            }
-
-            isTransitioning = false;
         }
 
         function startAutoplay() {
 
             stopAutoplay();
 
-            if (originalSlides.length <= visibleSlides) {
-                return;
-            }
+            if (slides.length <= 1) return;
 
             autoplayInterval = setInterval(
                 nextSlide,
                 autoplayTime
             );
-        }
 
-        function stopAutoplay() {
-
-            if (autoplayInterval) {
-
-                clearInterval(autoplayInterval);
-                autoplayInterval = null;
-
-            }
         }
 
         function restartAutoplay() {
 
             stopAutoplay();
             startAutoplay();
+
         }
 
-        function reconnectLightbox() {
+        /* ==========================================
+        DOTS
+        ========================================== */
 
-            const images = track.querySelectorAll(".testimonial-slide img");
+        function createDots() {
 
-            images.forEach((image) => {
+            if (!dotsContainer) return;
 
-                image.addEventListener("click", () => {
+            dotsContainer.innerHTML = "";
 
-                    const src = image.getAttribute("src");
+            slides.forEach((_, index) => {
 
-                    const index = albums.avaliacoes.findIndex(item =>
-                        item.src === src
-                    );
+                const dot = document.createElement("button");
 
-                    if (index >= 0) {
+                dot.type = "button";
+                dot.className = "testimonials-carousel__dot";
 
-                        openLightbox(albums.avaliacoes, index);
+                dot.setAttribute(
+                    "aria-label",
+                    `Ir para avaliação ${index + 1}`
+                );
 
-                    }
+                dot.addEventListener("click", () => {
+
+                    goToSlide(index);
+                    restartAutoplay();
 
                 });
+
+                dotsContainer.appendChild(dot);
 
             });
 
         }
 
-        function handlePointerDown(event) {
+        function updateDots() {
 
-            if (originalSlides.length <= visibleSlides) {
+            if (!dotsContainer) return;
+
+            const currentIndex = getCurrentIndex();
+
+            const dots = dotsContainer.querySelectorAll(
+                ".testimonials-carousel__dot"
+            );
+
+            dots.forEach((dot, index) => {
+
+                const isActive = index === currentIndex;
+
+                dot.classList.toggle("active", isActive);
+
+                dot.setAttribute(
+                    "aria-current",
+                    isActive ? "true" : "false"
+                );
+
+            });
+
+        }
+
+        /* ==========================================
+        LIGHTBOX
+        ========================================== */
+
+        function openTestimonialImage(image) {
+
+            const index = Number(image.dataset.index);
+
+            if (
+                !Number.isInteger(index) ||
+                !albums.avaliacoes?.length
+            ) {
                 return;
             }
 
-            isDragging = true;
+            openLightbox(
+                albums.avaliacoes,
+                index
+            );
 
-            pointerStartX =
-                event.clientX ?? event.touches?.[0]?.clientX;
-
-            pointerCurrentX = pointerStartX;
-
-            stopAutoplay();
-
-            track.style.transition = "none";
         }
 
-        function handlePointerMove(event) {
+        track.addEventListener("click", (event) => {
 
-            if (!isDragging) {
+            const image = event.target.closest(
+                ".testimonial-slide img"
+            );
+
+            if (!image) return;
+
+            openTestimonialImage(image);
+
+        });
+
+        track.addEventListener("keydown", (event) => {
+
+            if (
+                event.key !== "Enter" &&
+                event.key !== " "
+            ) {
                 return;
             }
 
-            pointerCurrentX =
-                event.clientX ?? event.touches?.[0]?.clientX;
+            const image = event.target.closest(
+                ".testimonial-slide img"
+            );
 
-            const movement =
-                pointerCurrentX - pointerStartX;
+            if (!image) return;
 
-            const basePosition =
-                currentIndex * getSlideDistance();
+            event.preventDefault();
 
-            track.style.transform =
-                `translateX(${movement - basePosition}px)`;
-        }
+            openTestimonialImage(image);
 
-        function handlePointerUp() {
+        });
 
-            if (!isDragging) {
-                return;
-            }
-
-            isDragging = false;
-
-            const movement =
-                pointerCurrentX - pointerStartX;
-
-            const minimumMovement = 50;
-
-            if (movement <= -minimumMovement) {
-
-                nextSlide();
-
-            } else if (movement >= minimumMovement) {
-
-                previousSlide();
-
-            } else {
-
-                moveTrack(true);
-            }
-
-            restartAutoplay();
-        }
+        /* ==========================================
+        EVENTOS
+        ========================================== */
 
         nextButton?.addEventListener("click", () => {
 
@@ -1064,24 +1046,19 @@ const brandCarousel = document.querySelector('.brand-carousel');
 
         });
 
-        track.addEventListener(
-            "transitionend",
-            correctInfinitePosition
-        );
-
         viewport.addEventListener(
-            "pointerdown",
-            handlePointerDown
-        );
+            "scroll",
+            () => {
 
-        window.addEventListener(
-            "pointermove",
-            handlePointerMove
-        );
+                clearTimeout(scrollTimeout);
 
-        window.addEventListener(
-            "pointerup",
-            handlePointerUp
+                scrollTimeout = setTimeout(
+                    updateDots,
+                    80
+                );
+
+            },
+            { passive: true }
         );
 
         testimonialsCarousel.addEventListener(
@@ -1094,22 +1071,49 @@ const brandCarousel = document.querySelector('.brand-carousel');
             startAutoplay
         );
 
-        let resizeTimeout;
+        testimonialsCarousel.addEventListener(
+            "focusin",
+            stopAutoplay
+        );
+
+        testimonialsCarousel.addEventListener(
+            "focusout",
+            startAutoplay
+        );
+
+        viewport.addEventListener(
+            "touchstart",
+            stopAutoplay,
+            { passive: true }
+        );
+
+        viewport.addEventListener(
+            "touchend",
+            startAutoplay,
+            { passive: true }
+        );
 
         window.addEventListener("resize", () => {
 
-            clearTimeout(resizeTimeout);
+            const currentIndex = getCurrentIndex();
 
-            resizeTimeout = setTimeout(() => {
+            window.requestAnimationFrame(() => {
 
-                createInfiniteSlides();
-                startAutoplay();
+                goToSlide(currentIndex, false);
 
-            }, 200);
+            });
+
         });
 
-        createInfiniteSlides();
+        /* ==========================================
+        INICIALIZAÇÃO
+        ========================================== */
+
+        createDots();
+        updateDots();
         startAutoplay();
+
     }
+
   });
 })();
