@@ -442,6 +442,9 @@
     AVALIAÇÕES — CELULAR
     ========================================================== */
 
+    .testimonials #lkAvaliações{
+        color:#8ed7f3;
+    }
     .testimonials{
 
         padding-block:70px;
