@@ -529,6 +529,43 @@
         border-radius:18px;
 
     }
+    .testimonials-carousel__dots{
+
+        display:flex;
+
+        justify-content:center;
+
+        align-items:center;
+
+        gap:10px;
+
+        margin-top:22px;
+
+        width:10px;
+        
+        height:10px;
+
+        border:none;
+
+        border-radius:999px;
+
+        background:#d7dee5;
+
+        transition:.35s;
+
+    }
+
+    .testimonials-carousel__dot.active{
+
+        width:34px;
+
+        background:linear-gradient(
+            90deg,
+            var(--blue),
+            var(--pink)
+        );
+
+    }
 
     .testimonial-slide:hover img{
 
