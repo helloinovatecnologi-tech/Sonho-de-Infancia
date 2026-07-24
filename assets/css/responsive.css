@@ -351,36 +351,8 @@
     .lightbox__prev,
     .lightbox__next{
 
-        position:fixed;
+        display: none;
 
-        top:50%;
-
-        width:46px;
-        height:46px;
-
-        transform:translateY(-50%);
-
-        z-index:10001;
-
-    }
-
-    .lightbox__prev{
-
-        left:10px;
-
-    }
-
-    .lightbox__next{
-
-        right:10px;
-
-    }
-
-    .lightbox__prev:hover,
-    .lightbox__next:hover{
-        transform:
-            translateY(-50%)
-            scale(1.08);
     }
 
     .lightbox__counter{
@@ -494,6 +466,15 @@
 
         overflow-x:auto;
 
+        scrollbar-width:none;      /* Firefox */
+
+        -ms-overflow-style:none;   /* IE */
+
+    }
+    .testimonials-carousel__viewport::-webkit-scrollbar{
+
+        display:none;/* Chrome, Edge e Safari */
+
     }
 
     .testimonials-carousel__track{
@@ -537,13 +518,20 @@
 
         align-items:center;
 
-        gap:10px;
+        gap:8px;
 
-        margin-top:22px;
+        width:100%;
 
-        width:10px;
-        
-        height:10px;
+        margin-top:20px;
+
+        flex-wrap:wrap;
+
+    }
+    .testimonials-carousel__dot{
+
+        width:8px;
+
+        height:8px;
 
         border:none;
 
@@ -551,13 +539,15 @@
 
         background:#d7dee5;
 
+        cursor:pointer;
+
         transition:.35s;
 
     }
 
     .testimonials-carousel__dot.active{
 
-        width:34px;
+        width:24px;
 
         background:linear-gradient(
             90deg,
