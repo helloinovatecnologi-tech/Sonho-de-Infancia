@@ -480,7 +480,6 @@
 
         });
 
-
         // ======================================================
         // CONTROLES
         // ======================================================
@@ -510,7 +509,6 @@
             }
 
         });
-
 
         // ======================================================
         // CONTROLE PELO TECLADO
@@ -615,7 +613,6 @@
                 behavior: 'smooth'
             });
         });
-
 
         /* ======================================================
         CARROSSEL DA IDENTIDADE VISUAL
@@ -987,6 +984,43 @@
             createDots();
             update();
             startAutoplay();
+        }
+
+        const timeline = document.getElementById("timeline");
+        const toggleTimeline = document.getElementById("toggleTimeline");
+
+        if (timeline && toggleTimeline) {
+
+            timeline.classList.add("collapsed");
+
+            const arrow = document.querySelector(".timeline__expand-arrow");
+            const text = document.querySelector(".timeline__expand-text");
+
+            toggleTimeline.addEventListener("click", () => {
+
+                timeline.classList.toggle("collapsed");
+
+                const aberta = !timeline.classList.contains("collapsed");
+
+                if (arrow) {
+                    arrow.classList.toggle("expanded", aberta);
+                }
+
+                if (text) {
+                    text.textContent = aberta
+                        ? "Ocultar rotina"
+                        : "Ver rotina completa";
+                }
+
+                if (!aberta) {
+                    timeline.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }
+
+            });
+
         }
     });
 })();

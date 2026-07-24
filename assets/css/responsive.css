@@ -14,6 +14,9 @@
     .partners__grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
     }
+    .header #avaliacoes{
+        display: none;
+    }
 
     .menu-button{
         position:relative;
@@ -147,6 +150,10 @@
 ========================================================== */
 
 @media (max-width:680px){
+
+    .header #avaliacoes{
+        display: block;
+    }
 
     .container{
         width:min(calc(100% - 28px),var(--container));
@@ -444,6 +451,8 @@
 
     .testimonials #lkAvaliações{
         color:#8ed7f3;
+        text-decoration: underline;
+
     }
     .testimonials{
 
